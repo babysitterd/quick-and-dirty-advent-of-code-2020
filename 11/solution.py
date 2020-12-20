@@ -1,17 +1,55 @@
 #!/bin/env python3
 
-import functools
+#   N
+# W   E
+#   S
 
-def get_adjacent(position):
-    x, y = position
-    return [ (x - 1, y) ,
-             (x + 1, y) ,
-             (x, y - 1) ,
-             (x, y + 1) ,
-             (x - 1, y - 1) ,
-             (x - 1, y + 1) ,
-             (x + 1, y - 1) ,
-             (x + 1, y + 1) ]
+def get_N(x, y):
+    return (x - 1, y)
+
+def get_S(x, y):
+    return (x + 1, y)
+
+def get_W(x, y):
+    return (x, y - 1)
+
+def get_E(x, y):
+    return (x, y + 1)
+
+def get_NE(x, y):
+    return get_N(*get_E(x, y))
+
+def get_NW(x, y):
+    return get_N(*get_W(x, y))
+
+def get_SE(x, y):
+    return get_S(*get_E(x, y))
+
+def get_SW(x, y):
+    return get_S(*get_W(x, y))
+
+DIRECTIONS = [ get_N, get_S, get_W, get_E, get_NE, get_NW, get_SE, get_SW ]
+
+def get_immediate_occupied(position, field):
+    occupied = 0
+    for adjacent in [ foo(*position) for foo in DIRECTIONS ]:
+        if adjacent in field and field[adjacent] == '#':
+            occupied += 1
+    return occupied
+
+def get_in_sight_occupied(position, field):
+    occupied = 0
+    for foo in DIRECTIONS:
+        candidate = position
+        while True:
+            candidate = foo(*candidate)
+            if candidate not in field or field[candidate] == 'L':
+                break
+            if field[candidate] == '#':
+                occupied += 1
+                break
+
+    return occupied
 
 if __name__ == "__main__":
     with open('input') as source:
@@ -28,13 +66,13 @@ if __name__ == "__main__":
     while current != new:
         new = current.copy()
         for position in current:
-            adjacent_people = 0
-            for adjacent in get_adjacent(position):
-                if adjacent in current and current[adjacent] == '#':
-                    adjacent_people += 1
-            if current[position] == 'L' and adjacent_people == 0:
+#            occupied = get_immediate_occupied(position, current)
+            occupied = get_in_sight_occupied(position, current)
+            if current[position] == 'L' and occupied == 0:
                 new[position] = '#'
-            if current[position] == '#' and adjacent_people >= 4:
+
+#            if current[position] == '#' and occupied >= 4:
+            if current[position] == '#' and occupied >= 5:
                 new[position] = 'L'
 
         current, new = new, current
