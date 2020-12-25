@@ -5,16 +5,16 @@
 #   S
 
 def get_N(x, y):
-    return (x - 1, y)
+    return (x, y + 1)
 
 def get_S(x, y):
-    return (x + 1, y)
-
-def get_W(x, y):
     return (x, y - 1)
 
+def get_W(x, y):
+    return (x - 1, y)
+
 def get_E(x, y):
-    return (x, y + 1)
+    return (x + 1, y)
 
 def get_NE(x, y):
     return get_N(*get_E(x, y))
