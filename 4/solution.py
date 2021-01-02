@@ -53,7 +53,7 @@ def is_valid_part_two(collection):
     if not is_valid_part_one(collection):
         return False
 
-    return functools.reduce(lambda x, y: x and globals()[f'is_{y}_valid'](collection[y]), REQUIRED_KEYS);
+    return functools.reduce(lambda x, y: x and globals()[f'is_{y}_valid'](collection[y]), REQUIRED_KEYS)
 
 if __name__ == "__main__":
     with open('input') as source:
